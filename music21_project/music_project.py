@@ -37,33 +37,6 @@ def encode(note):
         encoded = 11
     return encoded
 
-def decode(encoded_number, name, add_new):
-    encoded_number = encoded_number + add_new
-    if (encoded_number == 0):
-        name = 'C0'
-    if (encoded_number == 1):
-        name = 'Db'
-    if (encoded_number == 2):
-        name = 'D0'
-    if (encoded_number == 3):
-        name = 'Eb'
-    if(encoded_number == 4):
-        name = 'E0'
-    if(encoded_number == 5):
-        name = 'F0'
-    if (encoded_number == 6):
-        name = 'Gb'
-    if (encoded_number == 7):
-        name = 'G0'
-    if (encoded_number == 8):
-        name = 'Ab'
-    if (encoded_number == 9):
-        name = 'A0'
-    if (encoded_number == 10):
-        name = 'Bb'
-    if (encoded_number == 11):
-        name = 'B0'
-    return encoded_number, name
 
 #s.show()
 time_sign = 0
