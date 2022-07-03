@@ -10,6 +10,12 @@ def check_single(name):
         name = name + "0"
     return name
 
+def check_chord_type(chord_string, code):
+    isMinor = chord_string.find('minor')
+    isDiminished = chord_string.find('diminished')
+    if (isMinor != -1 or isDiminished != -1):
+        code = code + 12
+    return code
 
 def encode(note):
     encoded = 567
@@ -84,6 +90,7 @@ for el in s.recurse():
         chord_root = chord_root.replace('-', 'b')
         chord_encoded = encode(chord_root)
         chord_type = el.chordKind
+        chord_encoded = check_chord_type(chord_type, chord_encoded)
         measure = el.activeSite.measureNumber
     elif el.classes[0] == 'TimeSignature':
         time_sign = el.ratioString
