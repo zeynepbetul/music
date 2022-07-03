@@ -2,7 +2,7 @@ import pandas as pd
 import music21 as m21
 import numpy as np
 
-path = '/Users/zeynepbetulkaya/PycharmProjects/pythonProject9/Stephen Sondheim - A Little Night Music.mxl'
+path = '/Users/zeynepbetulkaya/PycharmProjects/music/music21_project/Stephen Sondheim - A Little Night Music.mxl'
 s = m21.converter.parse(path) # s -> <music21.stream.Score 0x10556f160>
 
 def check_single(name):
