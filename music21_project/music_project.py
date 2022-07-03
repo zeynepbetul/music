@@ -10,7 +10,9 @@ def check_single(name):
         name = name + "0"
     return name
 
+
 def encode(note):
+    encoded = 567
     if (note == 'C0'):
         encoded = 0
     if (note == 'Db'):
@@ -72,6 +74,7 @@ for el in s.recurse():
         note_octave = 0
         note_duration = el.duration.quarterLength * 4.0
         measure = el.activeSite.measureNumber
+        note_encoded = 12
         new_array = [time_sign, measure, key_fifths, key_tonic, key_mode, chord_root,
                      chord_type, note_root, note_octave, note_duration, key_encoded, chord_encoded, note_encoded]
         combined_array = np.vstack((combined_array, new_array))
@@ -94,7 +97,7 @@ for el in s.recurse():
         key_encoded = encode(key_tonic)
         key_mode = el.mode
         #print('keys:', key_fifths, key_mode)
-    print(el.offset, el, el.activeSite, el.classes[0])
+
 
 combined_array = np.delete(combined_array, 0, axis=0)
 print(combined_array)
@@ -102,5 +105,5 @@ df = pd.DataFrame(combined_array, columns=['time', 'measure', 'key fifths', 'key
                                            'key mode', 'chord root', 'chord type', 'note root',
                                            'note octave', 'note duration', 'key encoded', 'chord encoded',
                                            'note encoded'])
-df.to_excel('pandas_t_excel.xlsx', sheet_name='new_shet_name', index=False)
+df.to_excel('last.xlsx', sheet_name='last', index=False)
 
