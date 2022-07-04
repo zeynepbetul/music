@@ -2,7 +2,7 @@ import pandas as pd
 import music21 as m21
 import numpy as np
 
-path = '/Users/zeynepbetulkaya/PycharmProjects/music/music21_project/Stephen Sondheim - A Little Night Music.mxl'
+path = '/Users/zeynepbetulkaya/PycharmProjects/music/music21_project/Al Jacobs.mxl'
 s = m21.converter.parse(path) # s -> <music21.stream.Score 0x10556f160>
 
 def check_single(name):
@@ -13,37 +13,34 @@ def check_single(name):
 def check_chord_type(chord_string, code):
     isMinor = chord_string.find('minor')
     isDiminished = chord_string.find('diminished')
-    containsSqBr = chord_string.find('[]')
     if (isMinor != -1 or isDiminished != -1):
         code = code + 12
-    if (containsSqBr != -1):
-        code = 24
     return code
 
 def encode(note):
-    if (note == 'C0' or 'B#'):
+    if (note == 'C0' or note == 'B#'):
         encoded = 0
-    if (note == 'Db' or 'C#'):
+    elif (note == 'Db' or note == 'C#'):
         encoded = 1
-    if (note == 'D0'):
+    elif (note == 'D0'):
         encoded = 2
-    if (note == 'Eb' or 'D#'):
+    elif (note == 'Eb' or note == 'D#'):
         encoded = 3
-    if(note == 'E0' or 'Fb'):
+    elif(note == 'E0' or note == 'Fb'):
         encoded = 4
-    if(note == 'F0' or 'E#'):
+    elif(note == 'F0' or note == 'E#'):
         encoded = 5
-    if (note == 'Gb' or 'F#'):
+    elif (note == 'Gb' or note == 'F#'):
         encoded = 6
-    if (note == 'G0'):
+    elif (note == 'G0'):
         encoded = 7
-    if (note == 'Ab' or 'G#'):
+    elif (note == 'Ab' or note == 'G#'):
         encoded = 8
-    if (note == 'A0'):
+    elif (note == 'A0'):
         encoded = 9
-    if (note == 'Bb' or 'A#'):
+    elif (note == 'Bb' or note == 'A#'):
         encoded = 10
-    if (note == 'B0' or 'Cb'):
+    elif (note == 'B0' or note == 'Cb'):
         encoded = 11
     return encoded
 
@@ -58,7 +55,6 @@ chord_type = ''
 note_root = ''
 note_octave = 0
 note_duration = 0.0
-key_tonic = ''
 chord_encoded = ''
 note_encoded = ''
 new_array = []
@@ -113,5 +109,11 @@ df = pd.DataFrame(combined_array, columns=['time', 'measure', 'key fifths', 'key
                                            'key mode', 'chord root', 'chord type', 'note root',
                                            'note octave', 'note duration', 'key encoded', 'chord encoded',
                                            'note encoded'])
-df.to_excel('last.xlsx', sheet_name='last', index=False)
+
+df['chord root'] = df['chord root'].replace('', '[]')
+df['chord type'] = df['chord type'].replace('', '[]')
+
+index = df[df['chord type'] == '[]'].index
+df['chord encoded'][index] = 24
+df.to_excel('yeni.xlsx', sheet_name='yeni', index=False)
 
