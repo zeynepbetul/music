@@ -13,38 +13,39 @@ def check_single(name):
 def check_chord_type(chord_string, code):
     isMinor = chord_string.find('minor')
     isDiminished = chord_string.find('diminished')
+    containsSqBr = chord_string.find('[]')
     if (isMinor != -1 or isDiminished != -1):
         code = code + 12
+    if (containsSqBr != -1):
+        code = 24
     return code
 
 def encode(note):
-    encoded = 567
-    if (note == 'C0'):
+    if (note == 'C0' or 'B#'):
         encoded = 0
-    if (note == 'Db'):
+    if (note == 'Db' or 'C#'):
         encoded = 1
     if (note == 'D0'):
         encoded = 2
-    if (note == 'Eb'):
+    if (note == 'Eb' or 'D#'):
         encoded = 3
-    if(note == 'E0'):
+    if(note == 'E0' or 'Fb'):
         encoded = 4
-    if(note == 'F0'):
+    if(note == 'F0' or 'E#'):
         encoded = 5
-    if (note == 'Gb'):
+    if (note == 'Gb' or 'F#'):
         encoded = 6
     if (note == 'G0'):
         encoded = 7
-    if (note == 'Ab'):
+    if (note == 'Ab' or 'G#'):
         encoded = 8
     if (note == 'A0'):
         encoded = 9
-    if (note == 'Bb'):
+    if (note == 'Bb' or 'A#'):
         encoded = 10
-    if (note == 'B0'):
+    if (note == 'B0' or 'Cb'):
         encoded = 11
     return encoded
-
 
 #s.show()
 time_sign = 0
