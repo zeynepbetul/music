@@ -3,8 +3,8 @@ import music21 as m21
 import numpy as np
 
 path = '/Users/zeynepbetulkaya/PycharmProjects/music/music21_project/Al Jacobs.mxl'
-s = m21.converter.parse(path) # s -> <music21.stream.Score 0x10556f160>
-
+s = m21.converter.parse(path)  # s -> <music21.stream.Score 0x10556f160>
+#s.show('text')
 def check_single(name):
     if len(name) == 1:
         name = name + "0"
@@ -57,8 +57,11 @@ note_octave = 0
 note_duration = 0.0
 chord_encoded = ''
 note_encoded = ''
+
 new_array = []
 combined_array = np.zeros((1, 13))
+new_chord_array = []
+chord_array = np.zeros((1, 3))
 
 for el in s.recurse():
     if el.classes[0] == 'Note':
@@ -72,6 +75,14 @@ for el in s.recurse():
         new_array = [time_sign, measure, key_fifths, key_tonic, key_mode, chord_root,
                      chord_type, note_root, note_octave, note_duration, key_encoded, chord_encoded, note_encoded]
         combined_array = np.vstack((combined_array, new_array))
+    elif el.classes[0] == 'Measure':
+        if chord_array[0, 0] == 0:
+            chord_array = np.delete(chord_array, 0, axis=0)
+        chord_root = ''
+        chord_type = ''
+        chord_encoded = ''
+        new_chord_array = [chord_root, chord_type, chord_encoded]
+        chord_array = np.vstack((chord_array, new_chord_array))
     elif el.classes[0] == 'Rest':
         note_root = 'rest'
         note_octave = 0
@@ -82,17 +93,18 @@ for el in s.recurse():
                      chord_type, note_root, note_octave, note_duration, key_encoded, chord_encoded, note_encoded]
         combined_array = np.vstack((combined_array, new_array))
     elif el.classes[0] == 'ChordSymbol':
-        chord_root = el.root().name
-        chord_root = check_single(chord_root)
-        chord_root = chord_root.replace('-', 'b')
-        chord_encoded = encode(chord_root)
-        chord_type = el.chordKind
-        chord_encoded = check_chord_type(chord_type, chord_encoded)
-        measure = el.activeSite.measureNumber
+        if chord_root == '':
+            chord_root = el.root().name
+            chord_root = check_single(chord_root)
+            chord_root = chord_root.replace('-', 'b')
+            chord_encoded = encode(chord_root)
+            chord_type = el.chordKind
+            chord_encoded = check_chord_type(chord_type, chord_encoded)
+            chord_array[el.activeSite.measureNumber - 1, 0] = chord_root
+            chord_array[el.activeSite.measureNumber - 1, 1] = chord_type
+            chord_array[el.activeSite.measureNumber - 1, 2] = chord_encoded
     elif el.classes[0] == 'TimeSignature':
         time_sign = el.ratioString
-        measure = el.activeSite.measureNumber
-        #print('time: ', time_sign)
     elif el.classes[0] == 'Key':
         key_fifths = el.sharps
         key_tonic = el.tonic
@@ -100,11 +112,15 @@ for el in s.recurse():
         key_tonic = key_tonic.replace('-', 'b')
         key_encoded = encode(key_tonic)
         key_mode = el.mode
-        #print('keys:', key_fifths, key_mode)
-
 
 combined_array = np.delete(combined_array, 0, axis=0)
-print(combined_array)
+for iteration, item in enumerate(combined_array[:, 1]):
+    combined_array[iteration, 5] = chord_array[int(item) - 1, 0]  # chord root
+    combined_array[iteration, 6] = chord_array[int(item) - 1, 1]  # chord type
+    combined_array[iteration, 11] = chord_array[int(item) - 1, 2]  # chord encoded
+
+print(chord_array)
+
 df = pd.DataFrame(combined_array, columns=['time', 'measure', 'key fifths', 'key tonic',
                                            'key mode', 'chord root', 'chord type', 'note root',
                                            'note octave', 'note duration', 'key encoded', 'chord encoded',
@@ -115,5 +131,5 @@ df['chord type'] = df['chord type'].replace('', '[]')
 
 index = df[df['chord type'] == '[]'].index
 df['chord encoded'][index] = 24
-df.to_excel('yeni.xlsx', sheet_name='yeni', index=False)
+df.to_excel('last.xlsx', sheet_name='last', index=False)
 
