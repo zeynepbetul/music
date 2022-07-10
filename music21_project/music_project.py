@@ -2,7 +2,7 @@ import pandas as pd
 import music21 as m21
 import numpy as np
 
-path = '/Users/zeynepbetulkaya/PycharmProjects/music/music21_project/Al Jacobs.mxl'
+path = '/Users/zeynepbetulkaya/PycharmProjects/music/music21_project/Stephen Sondheim - A Little Night Music.mxl'
 s = m21.converter.parse(path)  # s -> <music21.stream.Score 0x10556f160>
 #s.show('text')
 def check_single(name):
@@ -115,9 +115,14 @@ for el in s.recurse():
 
 combined_array = np.delete(combined_array, 0, axis=0)
 for iteration, item in enumerate(combined_array[:, 1]):
-    combined_array[iteration, 5] = chord_array[int(item) - 1, 0]  # chord root
-    combined_array[iteration, 6] = chord_array[int(item) - 1, 1]  # chord type
-    combined_array[iteration, 11] = chord_array[int(item) - 1, 2]  # chord encoded
+    if chord_array[int(item) - 1, 0] != '':
+        combined_array[iteration, 5] = chord_array[int(item) - 1, 0]  # chord root
+        combined_array[iteration, 6] = chord_array[int(item) - 1, 1]  # chord type
+        combined_array[iteration, 11] = chord_array[int(item) - 1, 2]  # chord encoded
+    else:
+        combined_array[iteration, 5] = chord_array[int(item) - 2, 0]  # chord root
+        combined_array[iteration, 6] = chord_array[int(item) - 2, 1]  # chord type
+        combined_array[iteration, 11] = chord_array[int(item) - 2, 2]  # chord encoded
 
 print(chord_array)
 
@@ -131,5 +136,5 @@ df['chord type'] = df['chord type'].replace('', '[]')
 
 index = df[df['chord type'] == '[]'].index
 df['chord encoded'][index] = 24
-df.to_excel('last.xlsx', sheet_name='last', index=False)
+df.to_excel('last3.xlsx', sheet_name='last3', index=False)
 
