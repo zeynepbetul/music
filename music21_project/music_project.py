@@ -124,7 +124,7 @@ for iteration, item in enumerate(combined_array[:, 1]):
         combined_array[iteration, 6] = chord_array[int(item) - 2, 1]  # chord type
         combined_array[iteration, 11] = chord_array[int(item) - 2, 2]  # chord encoded
 
-print(chord_array)
+print(combined_array)
 
 df = pd.DataFrame(combined_array, columns=['time', 'measure', 'key fifths', 'key tonic',
                                            'key mode', 'chord root', 'chord type', 'note root',
