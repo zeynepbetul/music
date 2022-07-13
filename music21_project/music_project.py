@@ -98,7 +98,7 @@ for filename in os.listdir(path_of_the_directory):
             chord_root = ''
             chord_type = ''
             chord_encoded = ''
-            new_chord_array = [chord_root, chord_type, chord_encoded]
+            new_chord_array = [chord_root, chord_type, chord_encoded]  # have only one chord per measure
             chord_array = np.vstack((chord_array, new_chord_array))
         elif el.classes[0] == 'Rest':
             note_root = 'rest'
@@ -137,7 +137,7 @@ for filename in os.listdir(path_of_the_directory):
         continue
 
     combined_array = np.delete(combined_array, 0, axis=0)
-    for iteration, item in enumerate(combined_array[:, 1]):
+    for iteration, item in enumerate(combined_array[:, 1]):  # Update all measure according to measure's chord
         if chord_array[int(item) - 1, 0] != '':
             combined_array[iteration, 5] = chord_array[int(item) - 1, 0]  # chord root
             combined_array[iteration, 6] = chord_array[int(item) - 1, 1]  # chord type
